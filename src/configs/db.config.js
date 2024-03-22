@@ -1,0 +1,7 @@
+module.exports = {
+    HOST: "localhost",
+    USER: "root",
+    PASSWORD: "",
+    DB: "cnm_db",
+    PORT: 3307
+  };
