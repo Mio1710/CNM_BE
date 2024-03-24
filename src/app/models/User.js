@@ -11,7 +11,7 @@ const User = function(user) {
   this.password = user.password;
   this.maKhoa = user.maKhoa;
   this.hinhanh = user.hinhanh;
-  this.maLop = user.maLop;
+  this.phone = user.phone;
 };
 
 User.create = (newUser, result) => {
@@ -46,12 +46,17 @@ User.findById = (id, result) => {
   });
 };
 
-User.getAll = (title, result) => {
-  let query = "SELECT * FROM users";
-
-  if (title) {
-    query += ` WHERE title LIKE '%${title}%'`;
+User.getAll = getAll = (include, type, result) => {
+  let joinTables = '';
+  if(include.length > 0) {
+      include.forEach(e => {
+        if(e === 'khoa') {
+          joinTables = joinTables + ' JOIN faculties ON users.maKhoa = faculties.id';
+        }
+      });
   }
+  console.log('joinTables', joinTables);
+  let query = "SELECT users.*, faculties.ten as tenKhoa FROM users"+ joinTables +" where type = '" + type +"'";
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -82,7 +87,7 @@ User.updateById = (id, user, result) => {
         return;
       }
 
-      console.log("updated User: ", { id: id, ...User });
+      console.log("updated user: ", { id: id, ...User });
       result(null, { id: id, ...User });
     }
   );
@@ -102,20 +107,20 @@ User.remove = (id, result) => {
       return;
     }
 
-    console.log("deleted User with id: ", id);
+    console.log("deleted user with id: ", id);
     result(null, res);
   });
 };
 
 User.removeAll = result => {
-  sql.query("DELETE FROM Users", (err, res) => {
+  sql.query("DELETE FROM users", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
 
-    console.log(`deleted ${res.affectedRows} Users`);
+    console.log(`deleted ${res.affectedRows} users`);
     result(null, res);
   });
 };

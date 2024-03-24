@@ -1,3 +1,4 @@
+'use strict';
 const Faculty = require("../models/Faculty");
 
 // Retrieve all Faculty from the database (with condition).

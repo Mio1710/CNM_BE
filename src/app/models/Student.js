@@ -40,8 +40,8 @@ Student.findById = (id, result) => {
   });
 };
 
-Student.getAll = (title, result) => {
-  let query = "SELECT * FROM students";
+Student.getAll = (title, type, result) => {
+  let query = "SELECT * FROM students where type = " + type;
 
   if (title) {
     query += ` WHERE title LIKE '%${title}%'`;
