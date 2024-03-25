@@ -1,12 +1,9 @@
-const mysql = require("mysql");
-const dbConfig = require("../../configs/db.config.js");
+const { Sequelize } = require('sequelize');
 
-var connection = mysql.createPool({
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB,
-  port: dbConfig.PORT
-});
-
-module.exports = connection;
+const sequelize = new Sequelize('cnm_db', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql',
+    port: 3307,
+    dialectModule: require('mysql2')
+})
+module.exports = sequelize;
