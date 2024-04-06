@@ -4,18 +4,18 @@ const User = require("../models/User.js");
 // Retrieve all User from the database (with condition).
 exports.index = (req, res) => {
   const include = req.query.filter.include;
-    const users = User.findAll({
-      include: include
-    })
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving users."
-        });
-    });
-  };
+  User.findAll({
+    include: include
+  })
+  .then(data => {
+      res.send(data);
+  }).catch(err => {
+      res.status(500).send({
+          message:
+              err.message || "Some error occurred while retrieving users."
+      });
+  });
+};
 
 // Find a single User by Id
 exports.show = (req, res) => {
@@ -36,8 +36,28 @@ exports.show = (req, res) => {
   
   
 // Create and Save a new User
-exports.create = (req, res) => {
-  const user = User.create(new User(req.body));
+exports.create = async (req, res) => {
+
+  const { maso, matKhau } = req.body;
+  // check user exist
+  const userExists = await User.findOne({
+      where: {
+          maso
+      }
+  });
+  if (userExists) {
+      return res.status(400).send("User already exists.");
+  }
+  // Hash the password
+  const bcrypt = require('bcrypt');
+  const salt = bcrypt.genSaltSync(10);
+  console.log('salt: ', salt, matKhau);
+  const hashedPassword = await bcrypt.hash(matKhau ?? "123456", salt);
+  // Create a new user
+
+  req.body.matKhau = hashedPassword;
+  // Save User in the database
+  const user = User.create(req.body);
   res.send(user);
 };
 

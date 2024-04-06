@@ -29,7 +29,7 @@ exports.show = (req, res) => {
   
 // Create and Save a new Faculty
 exports.create = (req, res) => {
-  const user = Faculty.create(new Faculty(req.body));
+  const user = Faculty.create(req.body);
   res.send(user);
 };
 
