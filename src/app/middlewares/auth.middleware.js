@@ -9,7 +9,7 @@ exports.isAuth = async (req, res, next) => {
 	// Lấy access token từ header
 	const accessTokenFromHeader = req.headers.authorization;
 	if (!accessTokenFromHeader) {
-		return res.status(401).send('Không tìm thấy access token!');
+		return res.status(401).json({msg: 'Unauthorized!'});
 	}
 	// get exactly token
 	const checkBearer = accessTokenFromHeader.split(' ')[0] === 'Bearer';
@@ -26,7 +26,7 @@ exports.isAuth = async (req, res, next) => {
 		if (!verified) {
 			return res
 				.status(401)
-				.send('Bạn không có quyền truy cập vào tính năng này!');
+				.json({msg: 'Unauthorized!'});
 		}
 	
 		const user = await userModle.findByPk(verified.maso);
