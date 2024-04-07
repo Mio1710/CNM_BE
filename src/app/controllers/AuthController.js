@@ -20,7 +20,9 @@ exports.login = async  (req, res) => {
     const bcrypt = require('bcrypt');
     const isPasswordValid = bcrypt.compareSync(matKhau, user.matKhau);
     if (!isPasswordValid) {
-      return res.status(401).send('Mật khẩu không chính xác.');
+      return res.status(401).json({
+        msg: 'Tên đăng nhập hoặc mật khẩu không đúng'
+      });
     }
     // User found and authenticated
     const token = jwt.sign({ maso: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
@@ -32,7 +34,9 @@ exports.login = async  (req, res) => {
     });
   } else {
     // User not found or password does not match
-    res.status(401).send('Username or password incorrect');
+    res.status(401).json({
+      msg: 'Tên đăng nhập hoặc mật khẩu không đúng',
+    });
   }
 
 }
@@ -58,4 +62,8 @@ exports.getUser = async (req, res) => {
     }
     res.send({ user: user});
 
+}
+
+exports.logout = async (req, res) => {
+    res.status(200).send({ msg: 'Đăng xuất thành công.' });
 }
