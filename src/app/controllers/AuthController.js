@@ -10,21 +10,26 @@ exports.login = async  (req, res) => {
   // This is a very basic authentication
   const user = await User.findOne({
     where: {
-      maso,
-      matKhau
+      maso
     }
   });
   
-  console.log('user: ', user);
   if (user) {
-    // User found and authenticated
-    const token = jwt.sign({ userId: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+    // Validate password
 
-	return res.json({
-		msg: 'Đăng nhập thành công.',
-		token,
-		user,
-	});
+    const bcrypt = require('bcrypt');
+    const isPasswordValid = bcrypt.compareSync(matKhau, user.matKhau);
+    if (!isPasswordValid) {
+      return res.status(401).send('Mật khẩu không chính xác.');
+    }
+    // User found and authenticated
+    const token = jwt.sign({ maso: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+
+    return res.json({
+      msg: 'Đăng nhập thành công.',
+      token,
+      user,
+    });
   } else {
     // User not found or password does not match
     res.status(401).send('Username or password incorrect');
@@ -47,15 +52,10 @@ exports.refreshToken = async (req, res) => {
 
 exports.getUser = async (req, res) => {
     //check token and return user information with jwt nodejs
-    const token = req.headers['x-access-token'];
-    if (!token) {
-        return res.status(401).send({ message: "Unthozation" });
+    const user = {
+        ...req.user.dataValues,
+        matKhau: undefined
     }
-    jwt.verify(token, TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: "Unauthorized!" });
-        }
-        res.status(200).send(decoded);
-    });
+    res.send({ user: user});
 
 }
