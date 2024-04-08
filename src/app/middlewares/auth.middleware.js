@@ -35,3 +35,13 @@ exports.isAuth = async (req, res, next) => {
 
 	return next();
 };
+
+exports.isAdmin = async (req, res, next) => {
+	if (req.user.type === 'admin') {
+		return next();
+	}
+	return res.status(403).json({
+		msg: 'Bạn không có quyền truy cập!',
+		code: 'required_admin'
+	});
+};
