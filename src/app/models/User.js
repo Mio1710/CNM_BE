@@ -28,4 +28,11 @@ User.belongsTo(Faculty, {
     as: 'faculty'
 });
 
+
+// const ClassRoom = require('./ClassRoom.js');
+// User.belongsTo(ClassRoom, {
+//     foreignKey: 'maKhoa',
+//     as: 'faculty'
+// });
+
 module.exports = User;
