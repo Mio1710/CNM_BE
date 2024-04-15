@@ -4,8 +4,10 @@ const User = require("../models/User.js");
 // Retrieve all User from the database (with condition).
 exports.index = (req, res) => {
   const include = req.query.filter.include;
+  const type = req.query.filter.type;
   User.findAll({
-    include: include
+    include: include,
+    where: { type }
   })
   .then(data => {
       res.send(data);
