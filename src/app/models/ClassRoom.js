@@ -21,5 +21,4 @@ const ClassRoom = sequelize.define('ClassRoom', {
 
 const User = require('./User.js');
 
-
 module.exports = ClassRoom;
