@@ -5,7 +5,7 @@ const User = require("../models/User.js");
 exports.index = (req, res) => {
   const include = req.query.filter.include;
   User.findAll({
-    include: include
+    include: ['classroom']
   })
   .then(data => {
       res.send(data);

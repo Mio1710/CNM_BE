@@ -1,5 +1,6 @@
 const sequelize = require("./db.js");
 const DataTypes = require('sequelize');
+const ClassRoom = require('./ClassRoom.js');
 // constructor
 const User = sequelize.define('User', {
     id: {
@@ -12,7 +13,13 @@ const User = sequelize.define('User', {
     ten: DataTypes.STRING,
     email: DataTypes.STRING,
     matKhau: DataTypes.STRING,
-    maKhoa: DataTypes.STRING,
+    lopId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'classes',
+            key: 'id'
+        }
+    },
     hinhanh: DataTypes.STRING,
     phone: DataTypes.STRING,
     type: DataTypes.ENUM('admin', 'teacher', 'student')
@@ -21,18 +28,5 @@ const User = sequelize.define('User', {
     tableName: 'users'
 });
 
-// user belong to one khoa
-const Faculty = require('./Faculty.js');
-User.belongsTo(Faculty, {
-    foreignKey: 'maKhoa',
-    as: 'faculty'
-});
-
-
-// const ClassRoom = require('./ClassRoom.js');
-// User.belongsTo(ClassRoom, {
-//     foreignKey: 'maKhoa',
-//     as: 'faculty'
-// });
 
 module.exports = User;

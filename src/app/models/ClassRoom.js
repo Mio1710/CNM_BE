@@ -12,22 +12,14 @@ const ClassRoom = sequelize.define('ClassRoom', {
     ten: DataTypes.STRING,
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE,
-    gv: DataTypes.INTEGER
+    gvId: DataTypes.INTEGER,
+    khoaId: DataTypes.INTEGER
 }, {
     timestamps: false,
     tableName: 'classes'
 });
 
-// class has one gv
 const User = require('./User.js');
-ClassRoom.hasOne(User, {
-    name: 'gv',
-    foreignKey: 'id',
-    as: 'giangvien'
-});
 
-// ClassRoom.hasMany(User, {
-//   foreignKey: 'id',
-//   as: 'sinhvien'
-// });
+
 module.exports = ClassRoom;

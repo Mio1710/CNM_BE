@@ -1,12 +1,13 @@
 'use strict';
-const ClassRoom = require("../models/ClassRoom.js");
+const { Sequelize } = require('sequelize');
+const { ClassRoom, User } = require('../models');
 
 // Retrieve all ClassRoom from the database (with condition).
 exports.index = (req, res) => {
   const include = req.query.filter.include;
   console.log(1, include )
   ClassRoom.findAll({
-    include: ['giangvien']
+    include: ['giangvien', 'khoa', 'sinhvien']
   })
   .then(data => {
       res.send(data);
@@ -39,27 +40,21 @@ exports.show = (req, res) => {
 // Create and Save a new ClassRoom
 exports.create = async (req, res) => {
 
-  const { maso, matKhau } = req.body;
+  const { maLop } = req.body;
   // check ClassRoom exist
   const ClassRoomExists = await ClassRoom.findOne({
       where: {
-          maso
+        maLop
       }
   });
+  console.log('ClassRoomExists: ', ClassRoomExists);
   if (ClassRoomExists) {
       return res.status(400).send("ClassRoom already exists.");
   }
-  // Hash the password
-  const bcrypt = require('bcrypt');
-  const salt = bcrypt.genSaltSync(10);
-  console.log('salt: ', salt, matKhau);
-  const hashedPassword = await bcrypt.hash(matKhau ?? "123456", salt);
   // Create a new ClassRoom
-
-  req.body.matKhau = hashedPassword;
-  // Save ClassRoom in the database
-  const ClassRoom = ClassRoom.create(req.body);
-  res.send(ClassRoom);
+  const cls = ClassRoom.create(req.body);
+  res.send(cls);
+  
 };
 
 // Update a ClassRoom identified by the id in the request
