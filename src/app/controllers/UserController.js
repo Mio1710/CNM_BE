@@ -3,7 +3,7 @@ const User = require("../models/User.js");
 
 // Retrieve all User from the database (with condition).
 exports.index = (req, res) => {
-  const include = req.query.filter.include;
+  const include = req.query.filter.include.split(',');
   const type = req.query.filter.type;
   User.findAll({
     include: include,

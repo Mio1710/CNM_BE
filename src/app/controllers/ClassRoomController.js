@@ -4,10 +4,9 @@ const { ClassRoom, User } = require('../models');
 
 // Retrieve all ClassRoom from the database (with condition).
 exports.index = (req, res) => {
-  const include = req.query.filter.include;
-  console.log(1, include )
+  const include = req.query.filter.include.split(',');
   ClassRoom.findAll({
-    include: ['giangvien', 'khoa', 'sinhvien']
+    include: include
   })
   .then(data => {
       res.send(data);
