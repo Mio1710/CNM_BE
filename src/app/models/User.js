@@ -2,6 +2,8 @@ const sequelize = require("./db.js");
 const DataTypes = require('sequelize');
 const ClassRoom = require('./ClassRoom.js');
 // constructor
+// user include teacher and admin
+
 const User = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
@@ -13,16 +15,16 @@ const User = sequelize.define('User', {
     ten: DataTypes.STRING,
     email: DataTypes.STRING,
     matKhau: DataTypes.STRING,
-    lopId: {
+    khoaId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'classes',
+            model: 'faculties',
             key: 'id'
         }
     },
     hinhanh: DataTypes.STRING,
     phone: DataTypes.STRING,
-    type: DataTypes.ENUM('admin', 'teacher', 'student')
+    type: DataTypes.ENUM('admin', 'teacher')
 }, {
     timestamps: false,
     tableName: 'users'
