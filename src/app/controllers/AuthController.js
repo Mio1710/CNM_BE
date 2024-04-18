@@ -6,6 +6,7 @@ require('dotenv').config();
 
 exports.login = async  (req, res) => {
     const { maso, matKhau } = req.body;
+    console.log('loginnnnnnnnnnnnnnnnnnnnnnnn', req.body);
 
   // This is a very basic authentication
   const user = await User.findOne({
@@ -55,10 +56,15 @@ exports.refreshToken = async (req, res) => {
 }
 
 exports.getUser = async (req, res) => {
+  // get token from header
+    const accessTokenFromHeader = req.headers.authorization;
+    const token = accessTokenFromHeader.split(' ')[1];
+    console.log('get user', req.user.dataValues);
     //check token and return user information with jwt nodejs
     const user = {
         ...req.user.dataValues,
-        matKhau: undefined
+        matKhau: undefined,
+        token
     }
     res.send({ user: user});
 

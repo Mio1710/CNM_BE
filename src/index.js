@@ -5,6 +5,14 @@ const app = express()
 const port = 8000
 const route = require('./app/routes')
 
+const httpServer = require('http').createServer();
+const { Server } = require("socket.io")
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000"
+  }
+})
+
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -25,8 +33,32 @@ app.use((req, res, next) => {
   next();
 });
 
-route(app)
+route(app);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+const jwt = require('jsonwebtoken');
+httpServer.listen(8080)
+io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  socket.on('send', (msg) => {
+    // verify auth
+    const token = socket.handshake.auth.token;
+    const accessTokenSecret = process.env.TOKEN_SECRET;
+
+		const verified = jwt.verify(token, accessTokenSecret);
+    if (verified) {
+      // handle message
+
+      console.log('auth', socket.handshake.auth);
+      console.log('Nhận được msg rồi nèeeeeeeeeeeeee', msg);
+      socket.broadcast.emit('receive', msg);
+    }
+  }
+  );
+});
+
+app.listen(port, function () {
+  console.log('Node.js listening on port ' + port);
 })

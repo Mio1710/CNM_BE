@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const studentController = require('../controllers/UserController');
+const studentController = require('../controllers/StudentController');
 
 router.get('/:id', studentController.show);
 router.put('/:id', studentController.update);

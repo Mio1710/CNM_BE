@@ -2,17 +2,21 @@
 const User = require('./User.js');
 const ClassRoom = require('./ClassRoom.js');
 const Faculty = require('./Faculty.js');
+const Student = require('./Student.js');
 
 
 // User
-User.belongsTo(ClassRoom, {
-    foreignKey: 'lopId',
-    as: 'classroom'
-});
+User.belongsTo(Faculty, {foreignKey: 'khoaId', as: 'faculty'}); // giang vien sẽ thuộc 1 khoa
+User.hasMany(Student, {foreignKey: 'gvId', as: 'students'}); // giang vien se giam sat nhieu sinh vien
 
 // model classroom
 ClassRoom.belongsTo(Faculty, {foreignKey: 'khoaId', as: 'khoa'});
 ClassRoom.hasOne(User, {sourceKey: 'gvId', foreignKey: 'id', as: 'giangvien', where: {type: 'teacher'}});
-ClassRoom.hasMany(User, {foreignKey: 'id', as: 'sinhvien', where: {type: 'student'}});
+ClassRoom.hasMany(Student, {foreignKey: 'lopId', as: 'students'});
 
-module.exports = {User, ClassRoom, Faculty};
+
+// model student
+Student.belongsTo(ClassRoom, {foreignKey: 'lopId', as: 'classroom'});
+Student.belongsTo(User, {sourceKey: 'id', foreignKey: 'gvId', as: 'giangvien'});
+
+module.exports = {User, ClassRoom, Faculty, Student};

@@ -1,5 +1,5 @@
 'use strict';
-const User = require("../models/User.js");
+const { User } = require("../models");
 
 // Retrieve all User from the database (with condition).
 exports.index = (req, res) => {
