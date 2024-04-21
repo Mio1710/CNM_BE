@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `khoaId` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `maLop` (`maLop`),
-  KEY `gv_foreign` (`gvId`) USING BTREE,
+  KEY `gv_foreign` (`gvId`),
   KEY `khoaId_foreign` (`khoaId`),
   CONSTRAINT `gvId_foreign` FOREIGN KEY (`gvId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `khoaId_foreign` FOREIGN KEY (`khoaId`) REFERENCES `faculties` (`id`)
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `refreshToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `maso` (`maso`),
-  KEY `lop_id_foreign` (`khoaId`) USING BTREE,
+  KEY `lop_id_foreign` (`khoaId`),
   CONSTRAINT `khoa_id_foreign` FOREIGN KEY (`khoaId`) REFERENCES `faculties` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

@@ -41,12 +41,12 @@ exports.create = async (req, res) => {
 
   const { maso, matKhau } = req.body;
   // check Student exist
-  const StudentExists = await Student.findOne({
+  const studentExists = await Student.findOne({
       where: {
           maso
       }
   });
-  if (StudentExists) {
+  if (studentExists) {
       return res.status(400).send("Student already exists.");
   }
   // Hash the password
@@ -58,22 +58,23 @@ exports.create = async (req, res) => {
 
   req.body.matKhau = hashedPassword;
   // Save Student in the database
-  const Student = Student.create(req.body);
-  res.send(Student);
+  const student = Student.create(req.body);
+  res.send(student);
 };
 
 // Update a Student identified by the id in the request
 exports.update = (req, res) => {
   console.log('req.body: ', req.body, req.params.id);
-  const Student = Student.update(req.body, {
+  const student = Student.update(req.body, {
     where: {
       id: req.params.id
     }
   });
-  res.send(Student);
+  res.send(student);
 };
 
 // Delete a Student with the specified id in the request
+/*
 exports.delete = (req, res) => {
   Student.delete(req.params.id);
 };
@@ -87,5 +88,47 @@ exports.deleteAll = (req, res) => {
           err.message || "Some error occurred while removing all Students."
       });
     else res.send({ message: `All Students were deleted successfully!` });
+  });
+};
+*/
+// Delete a Student with the specified id in the request
+exports.delete = (req, res) => {
+  const id = req.params.id;
+
+  Student.destroy({
+    where: { id: id }
+  })
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "Student was deleted successfully!"
+      });
+    } else {
+      res.send({
+        message: `Cannot delete Student with id=${id}. Maybe Student was not found!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Could not delete Student with id=" + id
+    });
+  });
+};
+
+// Delete all Students from the database.
+exports.deleteAll = (req, res) => {
+  Student.destroy({
+    where: {},
+    truncate: false
+  })
+  .then(nums => {
+    res.send({ message: `${nums} Students were deleted successfully!` });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all Students."
+    });
   });
 };

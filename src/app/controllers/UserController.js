@@ -2,6 +2,7 @@
 const { User } = require("../models");
 
 // Retrieve all User from the database (with condition).
+/*
 exports.index = (req, res) => {
   const include = req.query.filter.include.split(',');
   const type = req.query.filter.type;
@@ -17,6 +18,49 @@ exports.index = (req, res) => {
               err.message || "Some error occurred while retrieving users."
       });
   });
+};
+// Retrieve all ClassRoom from the database (with condition).
+exports.index = (req, res) => {
+  console.log('UserController.index');
+    const users = User.findAll().then(data => {
+      res.send(data);
+    }).catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving ClassRoom."
+      });
+    });
+  };
+  */
+ exports.index = (req, res) => {
+  console.log('UserController.index');
+
+  // Kiểm tra xem liệu có tham số include trong query không
+  if (req.query.filter && req.query.filter.include) {
+    const include = req.query.filter.include.split(',');
+    User.findAll({
+      include: include
+    })
+    .then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving ClassRooms."
+        });
+    });
+  } else {
+    // Nếu không có tham số include, chỉ truy vấn lớp học mà không bao gồm các mô hình liên quan
+    User.findAll()
+    .then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving ClassRooms."
+        });
+    });
+  }
 };
 
 // Find a single User by Id
@@ -35,7 +79,7 @@ exports.show = (req, res) => {
       } else res.send(data);
     });
   };
-  
+
   
 // Create and Save a new User
 exports.create = async (req, res) => {
@@ -75,6 +119,7 @@ exports.update = (req, res) => {
 };
 
 // Delete a User with the specified id in the request
+/*
 exports.delete = (req, res) => {
   User.delete(req.params.id);
 };
@@ -88,5 +133,47 @@ exports.deleteAll = (req, res) => {
           err.message || "Some error occurred while removing all Users."
       });
     else res.send({ message: `All Users were deleted successfully!` });
+  });
+};
+*/
+// Delete a Student with the specified id in the request
+exports.delete = (req, res) => {
+  const id = req.params.id;
+
+  User.destroy({
+    where: { id: id }
+  })
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "User was deleted successfully!"
+      });
+    } else {
+      res.send({
+        message: `Cannot delete User with id=${id}. Maybe User was not found!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Could not delete User with id=" + id
+    });
+  });
+};
+
+// Delete all Students from the database.
+exports.deleteAll = (req, res) => {
+  User.destroy({
+    where: {},
+    truncate: false
+  })
+  .then(nums => {
+    res.send({ message: `${nums} Users were deleted successfully!` });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all Users."
+    });
   });
 };

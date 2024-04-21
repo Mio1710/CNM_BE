@@ -59,6 +59,7 @@ exports.update = (req, res) => {
 };
 
 // Delete a Class room with the specified id in the request
+/*
 exports.delete = (req, res) => {
   Faculty.delete(req.params.id);
   res.send({ message: `Faculty was deleted successfully!` });
@@ -68,4 +69,46 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   Faculty.deleteAll();
   res.send({ message: `All Facultys were deleted successfully!` });
+};
+*/
+// Delete a Student with the specified id in the request
+exports.delete = (req, res) => {
+  const id = req.params.id;
+
+  Faculty.destroy({
+    where: { id: id }
+  })
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "Faculty was deleted successfully!"
+      });
+    } else {
+      res.send({
+        message: `Cannot delete Faculty with id=${id}. Maybe Faculty was not found!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Could not delete Faculty with id=" + id
+    });
+  });
+};
+
+// Delete all Students from the database.
+exports.deleteAll = (req, res) => {
+  Faculty.destroy({
+    where: {},
+    truncate: false
+  })
+  .then(nums => {
+    res.send({ message: `${nums} Faculty were deleted successfully!` });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all Students."
+    });
+  });
 };

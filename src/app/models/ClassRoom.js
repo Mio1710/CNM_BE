@@ -12,8 +12,20 @@ const ClassRoom = sequelize.define('ClassRoom', {
     ten: DataTypes.STRING,
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE,
-    gvId: DataTypes.INTEGER,
-    khoaId: DataTypes.INTEGER
+    gvId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'users',
+            key: 'id'
+        }
+    },
+    khoaId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'faculties',
+            key: 'id'
+        }
+    },
 }, {
     timestamps: false,
     tableName: 'classes'
