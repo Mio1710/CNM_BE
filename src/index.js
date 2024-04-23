@@ -38,7 +38,7 @@ route(app);
 const jwt = require('jsonwebtoken');
 httpServer.listen(8080)
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
+  console.log('a user connected', socket);
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
