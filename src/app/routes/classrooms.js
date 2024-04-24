@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const classroomController = require('../controllers/ClassroomController');
+const classroomController = require('../controllers/ClassRoomController');
 const authMiddleware = require('../middlewares/auth.middleware.js');
 
 router.get('/:id', classroomController.show);
