@@ -19,18 +19,7 @@ exports.index = (req, res) => {
       });
   });
 };
-// Retrieve all ClassRoom from the database (with condition).
-exports.index = (req, res) => {
-  console.log('UserController.index');
-    const users = User.findAll().then(data => {
-      res.send(data);
-    }).catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving ClassRoom."
-      });
-    });
-  };
+
   */
  exports.index = (req, res) => {
   console.log('UserController.index');
@@ -39,7 +28,8 @@ exports.index = (req, res) => {
   if (req.query.filter && req.query.filter.include) {
     const include = req.query.filter.include.split(',');
     User.findAll({
-      include: include
+      include: include,
+      where: { type: 'teacher' }
     })
     .then(data => {
         res.send(data);
@@ -50,8 +40,10 @@ exports.index = (req, res) => {
         });
     });
   } else {
-    // Nếu không có tham số include, chỉ truy vấn lớp học mà không bao gồm các mô hình liên quan
-    User.findAll()
+    // Nếu không có tham số include, chỉ truy vấn users mà không bao gồm các mô hình liên quan
+    User.findAll({
+      where: { type: 'teacher' }
+    })
     .then(data => {
         res.send(data);
     }).catch(err => {

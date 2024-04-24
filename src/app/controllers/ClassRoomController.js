@@ -21,6 +21,7 @@ exports.index = (req, res) => {
 */
 
 // Retrieve all ClassRoom from the database (with condition).
+
 exports.index = (req, res) => {
   console.log('ClassRoomController.index');
 
@@ -145,7 +146,7 @@ exports.deleteAll = (req, res) => {
   });
 };
 */
-// Delete a Student with the specified id in the request
+// Delete a ClassRoom with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -170,7 +171,7 @@ exports.delete = (req, res) => {
   });
 };
 
-// Delete all Students from the database.
+// Delete all ClassRooms from the database.
 exports.deleteAll = (req, res) => {
   ClassRoom.destroy({
     where: {},
