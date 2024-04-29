@@ -5,6 +5,7 @@ const Faculty = require('./Faculty.js');
 const Student = require('./Student.js');
 const Room = require('./Room.js');
 const RoomMember = require('./RoomMember.js');
+const Company = require('./Company.js');
 
 
 // User
@@ -16,6 +17,8 @@ User.hasMany(RoomMember, {foreignKey: 'memberId', as: 'rooms'}); // user co the 
 ClassRoom.belongsTo(Faculty, {foreignKey: 'khoaId', as: 'khoa'});
 ClassRoom.hasOne(User, {sourceKey: 'gvId', foreignKey: 'id', as: 'giangvien', where: {type: 'teacher'}});
 ClassRoom.hasMany(Student, {foreignKey: 'lopId', as: 'students'});
+ClassRoom.hasMany(Company, { foreignKey: 'lop' });
+
 
 
 // model student
@@ -33,4 +36,9 @@ RoomMember.belongsTo(Room, {foreignKey: 'roomId', as: 'room'});
 RoomMember.belongsTo(User, {foreignKey: 'memberId', as: 'teachermembers', constraints: false});
 RoomMember.belongsTo(Student, {foreignKey: 'memberId', as: 'studentmembers', constraints: false});
 
-module.exports = {User, ClassRoom, Faculty, Student, Room };
+// model company
+//Company.hasMany(Student, {foreignKey: 'sinhvien', as: 'students'});
+//Company.belongsTo(ClassRoom, {foreignKey: 'lop', targetKey: 'id', as: 'classroom'});
+Company.belongsTo(User, {sourceKey: 'id', foreignKey: 'gv', as: 'giangvien'})
+
+module.exports = {User, ClassRoom, Faculty, Student, Room, Company }; 
