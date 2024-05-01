@@ -1,5 +1,6 @@
 const e = require('express');
-const userModle = require('../models/User.js');
+const userModel = require('../models/User.js');
+const studentModel = require('../models/Student.js');
 // import to use .env
 require('dotenv').config();
 
@@ -28,9 +29,17 @@ exports.isAuth = async (req, res, next) => {
 				.status(401)
 				.json({msg: 'Unauthorized!'});
 		}
-	
-		const user = await userModle.findByPk(verified.maso);
-		req.user = user;
+
+		if (verified.type === 'student') {
+			let user = await studentModel.findByPk(verified.maso);
+			user.dataValues.type = 'student';
+			req.user = user;
+			console.log('req.user student', req.user);
+		} else {
+			let user = await userModel.findByPk(verified.maso);
+			req.user = user;
+			console.log('req.user', req.user);
+		}
 	}
 
 	return next();

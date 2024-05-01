@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Student = require("../models/Student");
 const jwt = require('jsonwebtoken');
 // import to use .env
 require('dotenv').config();
@@ -9,12 +10,22 @@ exports.login = async  (req, res) => {
     console.log('loginnnnnnnnnnnnnnnnnnnnnnnn', req.body);
 
   // This is a very basic authentication
-  const user = await User.findOne({
+  let user = await User.findOne({
     where: {
       maso
     }
   });
-  
+
+  let student = await Student.findOne({
+    where: {
+      maso
+    }
+  });
+
+  if (!user) {
+    user = student;
+  }
+   
   if (user) {
     // Validate password
 
@@ -26,7 +37,7 @@ exports.login = async  (req, res) => {
       });
     }
     // User found and authenticated
-    const token = jwt.sign({ maso: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ maso: user.id, type: user.type ?? 'student' }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
 
     return res.json({
       msg: 'Đăng nhập thành công.',
