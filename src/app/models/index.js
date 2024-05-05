@@ -12,10 +12,11 @@ const Company = require('./Company.js');
 User.belongsTo(Faculty, {foreignKey: 'khoaId', as: 'faculty'}); // giang vien sẽ thuộc 1 khoa
 User.hasMany(Student, {foreignKey: 'gvId', as: 'students'}); // giang vien se giam sat nhieu sinh vien
 User.hasMany(RoomMember, {foreignKey: 'memberId', as: 'rooms'}); // user co the tham gia nhieu room
+User.hasMany(ClassRoom, {foreignKey: 'gvId', as: 'classes'}); // giang vien co the giang nhieu lop
 
 // model classroom
 ClassRoom.belongsTo(Faculty, {foreignKey: 'khoaId', as: 'khoa'});
-ClassRoom.hasOne(User, {sourceKey: 'gvId', foreignKey: 'id', as: 'giangvien', where: {type: 'teacher'}});
+ClassRoom.hasMany(User, {sourceKey: 'gvId', foreignKey: 'id', as: 'giangvien', where: {type: 'teacher'}});
 ClassRoom.hasMany(Student, {foreignKey: 'lopId', as: 'students'});
 ClassRoom.hasMany(Company, { foreignKey: 'lop' });
 
