@@ -25,7 +25,7 @@ ClassRoom.hasMany(Company, { foreignKey: 'lop' });
 Student.belongsTo(ClassRoom, {foreignKey: 'lopId', as: 'classroom'});
 Student.belongsTo(User, {sourceKey: 'id', foreignKey: 'gvId', as: 'giangvien'});
 Student.hasMany(RoomMember, {foreignKey: 'memberId', as: 'rooms'}); // sinh vien co the tham gia nhieu room
-
+Student.hasOne(Company, {foreignKey: 'sinhvien', as: 'company'});
 
 // model room
 Room.belongsTo(User, {foreignKey: 'leaderId', as: 'leader'});
@@ -39,6 +39,6 @@ RoomMember.belongsTo(Student, {foreignKey: 'memberId', as: 'studentmembers', con
 // model company
 //Company.hasMany(Student, {foreignKey: 'sinhvien', as: 'students'});
 //Company.belongsTo(ClassRoom, {foreignKey: 'lop', targetKey: 'id', as: 'classroom'});
-Company.belongsTo(User, {sourceKey: 'id', foreignKey: 'gv', as: 'giangvien'})
+Company.belongsTo(Student, {sourceKey: 'id', foreignKey: 'sinhvien', as: 'student'})
 
 module.exports = {User, ClassRoom, Faculty, Student, Room, Company }; 
