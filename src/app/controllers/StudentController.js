@@ -35,7 +35,7 @@ exports.show = (req, res) => {
     });
   };
   
-  
+
 // Create and Save a new Student
 exports.create = async (req, res) => {
 
@@ -73,25 +73,6 @@ exports.update = (req, res) => {
   res.send(student);
 };
 
-// Delete a Student with the specified id in the request
-/*
-exports.delete = (req, res) => {
-  Student.delete(req.params.id);
-};
-
-// Delete all Students from the database.
-exports.deleteAll = (req, res) => {
-  Student.removeAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all Students."
-      });
-    else res.send({ message: `All Students were deleted successfully!` });
-  });
-};
-*/
-// Delete a Student with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -130,5 +111,17 @@ exports.deleteAll = (req, res) => {
       message:
         err.message || "Some error occurred while removing all Students."
     });
+  });
+};
+
+exports.getMyCompany = (req, res) => {
+  console.log('student', req.user);
+  const student = Student.findOne({
+    where: {
+      id: req.user.id
+    },
+    include: ['company']
+  }).then((data) => {
+    res.send(data);
   });
 };
