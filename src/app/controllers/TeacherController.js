@@ -14,7 +14,9 @@ const { Op } = require("sequelize");
     where: {
       gvId: userId
     },
-    include: [{
+    include: [
+      'company',
+      {
       model: ClassRoom,
       as: 'classroom',
       where: {
@@ -24,6 +26,7 @@ const { Op } = require("sequelize");
       }
     }]
   }).then((data) => {
+    console.log('TeacherController.getCurrentStudents', data[0].fullName, data[0].full_name);
     res.send(data);
   })
 };
