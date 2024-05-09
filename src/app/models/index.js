@@ -6,6 +6,7 @@ const Student = require('./Student.js');
 const Room = require('./Room.js');
 const RoomMember = require('./RoomMember.js');
 const Company = require('./Company.js');
+const File = require('./File.js');
 
 
 // User
@@ -38,7 +39,10 @@ RoomMember.belongsTo(Student, {foreignKey: 'memberId', as: 'studentmembers', con
 
 // model company
 //Company.hasMany(Student, {foreignKey: 'sinhvien', as: 'students'});
-//Company.belongsTo(ClassRoom, {foreignKey: 'lop', targetKey: 'id', as: 'classroom'});
+Company.belongsTo(ClassRoom, {foreignKey: 'lop', targetKey: 'id', as: 'classroom'});
 Company.belongsTo(Student, {sourceKey: 'id', foreignKey: 'sinhvien', as: 'student'})
 
-module.exports = {User, ClassRoom, Faculty, Student, Room, Company }; 
+// mode file
+File.belongsTo(Student, {sourceKey: 'id', foreignKey: 'sv_id', as: 'student'});
+
+module.exports = {User, ClassRoom, Faculty, Student, Room, Company, File }; 

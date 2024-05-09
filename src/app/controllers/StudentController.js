@@ -120,7 +120,7 @@ exports.getMyCompany = (req, res) => {
     where: {
       id: req.user.id
     },
-    include: ['company']
+    include: ['company','classroom','giangvien']
   }).then((data) => {
     res.send(data);
   });
