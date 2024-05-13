@@ -29,6 +29,9 @@ exports.index = (req, res) => {
     const include = req.query.filter.include.split(',');
     User.findAll({
       include: include,
+      attributes: {
+        exclude: ['matKhau']
+      },
       where: { type: 'teacher' }
     })
     .then(data => {
