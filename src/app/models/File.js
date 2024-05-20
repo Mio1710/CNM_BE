@@ -18,8 +18,15 @@ const File = sequelize.define('File', {
     },
     date: DataTypes.DATE,
     report_file: DataTypes.STRING,
-    report_type: DataTypes.ENUM('0','1','2','3','4','5','6','7','8','9','10')
+    key: DataTypes.STRING,
+    report_type: DataTypes.ENUM('0','1','2','3','4','5','6','7','8','9','10'),
+    week: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return parseInt(this.report_type);
+        }
     
+    }
 }, {
     timestamps: false,
     tableName: 'files'

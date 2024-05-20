@@ -5,3 +5,4 @@ package-lock.json
 .idea/
 
 src/app/models/db.js
+.env

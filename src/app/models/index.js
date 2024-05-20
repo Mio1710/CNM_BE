@@ -28,6 +28,7 @@ Student.belongsTo(ClassRoom, {foreignKey: 'lopId', as: 'classroom'});
 Student.belongsTo(User, {sourceKey: 'id', foreignKey: 'gvId', as: 'giangvien'});
 Student.hasMany(RoomMember, {foreignKey: 'memberId', as: 'rooms'}); // sinh vien co the tham gia nhieu room
 Student.hasOne(Company, {foreignKey: 'sinhvien', as: 'company'});
+Student.hasMany(File, {foreignKey: 'sv_id', as: 'files'});
 
 // model room
 Room.belongsTo(User, {foreignKey: 'leaderId', as: 'leader'});
