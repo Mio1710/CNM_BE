@@ -61,7 +61,7 @@ exports.show = (req, res) => {
   exports.create = async (req, res) => {
     // Extract data from the request
     const { date, report_type, report_file, sv_id, commit } = req.body;
-  
+   
     // Create a new File
     const file = {
       date: new Date(),

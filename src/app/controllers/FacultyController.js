@@ -71,7 +71,7 @@ exports.deleteAll = (req, res) => {
   res.send({ message: `All Facultys were deleted successfully!` });
 };
 */
-// Delete a Student with the specified id in the request
+// Delete a Faculty with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -96,7 +96,7 @@ exports.delete = (req, res) => {
   });
 };
 
-// Delete all Students from the database.
+// Delete all Faculties from the database.
 exports.deleteAll = (req, res) => {
   Faculty.destroy({
     where: {},
