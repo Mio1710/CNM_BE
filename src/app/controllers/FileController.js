@@ -1,8 +1,27 @@
 'use strict';
 const { File } = require("../models");
 const { Op } = require("sequelize");
+const crypto = require('crypto');
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const dotenv = require('dotenv');
+const fs = require('fs');
 
+dotenv.config();
 
+const bucketName = process.env.BUCKET_NAME;
+const region = process.env.BUCKET_REGION;
+const accessKeyId = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey
+  }
+});
+const randomName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 // Retrieve all Files from the database (with condition).
 exports.index = (req, res) => {
   console.log('FileController.index');
@@ -12,9 +31,8 @@ exports.index = (req, res) => {
     const include = req.query.filter.include.split(',');
     File.findAll({
         include: include,
-        where: { report_type:{
-            [Op.in]: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-          }
+        where: { 
+          sv_id: req.user.id,
         }
     })
     .then(data => {
@@ -58,6 +76,7 @@ exports.show = (req, res) => {
     });
   };
 
+<<<<<<< HEAD
   exports.create = async (req, res) => {
     // Extract data from the request
     const { date, report_type, report_file, sv_id, commit } = req.body;
@@ -81,7 +100,48 @@ exports.show = (req, res) => {
           message: err.message || "Some error occurred while creating the File."
         });
       });
+=======
+exports.create = async (req, res) => {
+  // Extract data from the request
+  const { report_type, report_file, commit } = req.body;
+
+  console.log('req.body: ', req.file);
+  const key = randomName();
+  const params = {
+    Bucket: bucketName,
+    Key: key,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+>>>>>>> 576177e683127fa64a4837c764b479993b5e4487
   };
+
+  const command = new PutObjectCommand(params);
+  await s3.send(command);
+
+  const sv_id = req.user.id
+  console.log('current user id',req, sv_id);
+  // Create a new File
+  const file = {
+    date: new Date(),
+    report_type,
+    report_file: req.file.originalname,
+    key: key,
+    sv_id,
+    commit
+  };
+
+  // console.log('req.body: ', req.body, req.file, file, req.report_file);
+  // Save File in the database
+  File.create(file)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the File."
+      });
+    });
+};
   
 
 // Update a File identified by the id in the request
@@ -123,4 +183,21 @@ exports.deleteAll = (req, res) => {
         err.message || "Some error occurred while removing all Files."
     });
   });
+};
+
+exports.download = async (req, res) => {
+  const key = req.params.id;
+  const file = await File.findByPk(key);
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: file.key
+  });
+
+  const response = await s3.send(command);
+  res.setHeader('Content-Disposition', `attachment; filename="${file.report_file}"`);
+  res.setHeader('Content-Type', response.ContentType);
+
+    // Pipe the response body to the res stream
+  response.Body.pipe(res);
+
 };
