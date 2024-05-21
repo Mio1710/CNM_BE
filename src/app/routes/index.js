@@ -5,6 +5,7 @@ const facultyRouter = require('./faculties');
 const authRouter = require('./authencation');
 const companyRouter = require('./companies');
 const fileRouter = require('./files');
+const teacherRouter = require('./teachers');
 
 const authMiddleware = require('../middlewares/auth.middleware.js');
 
@@ -16,6 +17,7 @@ function route(app) {
     app.use('/api/auth', authRouter);
     app.use('/api/companies', authMiddleware.isAuth, companyRouter);
     app.use('/api/files', fileRouter);
+    app.use('/api/teachers', [authMiddleware.isAuth], teacherRouter);
 }
 
 module.exports = route;

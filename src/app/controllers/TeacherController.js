@@ -26,7 +26,6 @@ const { Op } = require("sequelize");
       }
     }]
   }).then((data) => {
-    console.log('TeacherController.getCurrentStudents', data[0].fullName, data[0].full_name);
     res.send(data);
   })
 };
