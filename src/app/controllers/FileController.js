@@ -76,31 +76,6 @@ exports.show = (req, res) => {
     });
   };
 
-<<<<<<< HEAD
-  exports.create = async (req, res) => {
-    // Extract data from the request
-    const { date, report_type, report_file, sv_id, commit } = req.body;
-   
-    // Create a new File
-    const file = {
-      date: new Date(),
-      report_type,
-      report_file,
-      sv_id,
-      commit
-    };
-  
-    // Save File in the database
-    File.create(file)
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: err.message || "Some error occurred while creating the File."
-        });
-      });
-=======
 exports.create = async (req, res) => {
   // Extract data from the request
   const { report_type, report_file, commit } = req.body;
@@ -112,7 +87,6 @@ exports.create = async (req, res) => {
     Key: key,
     Body: req.file.buffer,
     ContentType: req.file.mimetype,
->>>>>>> 576177e683127fa64a4837c764b479993b5e4487
   };
 
   const command = new PutObjectCommand(params);
