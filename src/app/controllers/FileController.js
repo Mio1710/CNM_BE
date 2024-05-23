@@ -25,38 +25,52 @@ const randomName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 // Retrieve all Files from the database (with condition).
 exports.index = (req, res) => {
   console.log('FileController.index');
-
+  console.log('user id', req.user.id);
+  File.findAll({
+      where: { 
+        sv_id: req.user.id,
+      }
+  })
+  .then(data => {
+          res.send(data);
+  }).catch(err => {
+          res.status(500).send({
+                  message:
+                          err.message || "Some error occurred while retrieving Files."
+          });
+  });
   // Check if there is an include parameter in the query
-  if (req.query.filter && req.query.filter.include) {
-    const include = req.query.filter.include.split(',');
-    File.findAll({
-        include: include,
-        where: { 
-          sv_id: req.user.id,
-        }
-    })
-    .then(data => {
-            res.send(data);
-    }).catch(err => {
-            res.status(500).send({
-                    message:
-                            err.message || "Some error occurred while retrieving Files."
-            });
-    });
-  } else {
-    // If there is no include parameter, only query files without including related models
-    File.findAll({
-      where: { report_type: { [Op.in]: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] } }
-    })
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message:
-                err.message || "Some error occurred while retrieving Files."
-        });
-    });
-  }
+  // if (req.query.filter && req.query.filter.include) {
+  //   const include = req.query.filter.include.split(',');
+  //   console.log('user id', req.user);
+  //   File.findAll({
+  //       include: include,
+  //       where: { 
+  //         sv_id: req.user.id,
+  //       }
+  //   })
+  //   .then(data => {
+  //           res.send(data);
+  //   }).catch(err => {
+  //           res.status(500).send({
+  //                   message:
+  //                           err.message || "Some error occurred while retrieving Files."
+  //           });
+  //   });
+  // } else {
+  //   // If there is no include parameter, only query files without including related models
+  //   File.findAll({
+  //     where: { report_type: { [Op.in]: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] } }
+  //   })
+  //   .then(data => {
+  //       res.send(data);
+  //   }).catch(err => {
+  //       res.status(500).send({
+  //           message:
+  //               err.message || "Some error occurred while retrieving Files."
+  //       });
+  //   });
+  // }
 };
 
 // Find a single File by Id

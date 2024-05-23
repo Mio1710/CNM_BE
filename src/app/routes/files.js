@@ -11,7 +11,7 @@ router.get('/:id/download', fileController.download);
 router.get('/:id', fileController.show);
 router.put('/:id', authMiddleware.isAuth ,fileController.update);
 router.delete('/:id', authMiddleware.isAuth, fileController.delete);
-router.get('/', fileController.index);
+router.get('/', authMiddleware.isAuth, fileController.index);
 router.post('/', [authMiddleware.isAuth, upload.single('report_file')], fileController.create);
 router.delete('/', authMiddleware.isAuth, fileController.deleteAll);
 
