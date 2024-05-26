@@ -30,7 +30,24 @@ const Student = sequelize.define('Student', {
         }
     },
     hinhanh: DataTypes.STRING,
-    phone: DataTypes.STRING
+    phone: DataTypes.STRING,
+    fullName: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return `${this.hodem} ${this.ten}`;
+        }
+    },
+    companyStatus: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            if(!this.company) {
+                return 0;
+            } else if(this.company.status === '0') {
+                return 1;
+            }
+            return 2;
+        }
+    }
 }, {
     timestamps: false,
     tableName: 'students'

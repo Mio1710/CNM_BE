@@ -1,5 +1,5 @@
 'use strict';
-const { Student } = require("../models");
+const { Student, Report } = require("../models");
 
 // Retrieve all Student from the database (with condition).
 exports.index = (req, res) => {
@@ -73,25 +73,6 @@ exports.update = (req, res) => {
   res.send(student);
 };
 
-// Delete a Student with the specified id in the request
-/*
-exports.delete = (req, res) => {
-  Student.delete(req.params.id);
-};
-
-// Delete all Students from the database.
-exports.deleteAll = (req, res) => {
-  Student.removeAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all Students."
-      });
-    else res.send({ message: `All Students were deleted successfully!` });
-  });
-};
-*/
-// Delete a Student with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -130,5 +111,50 @@ exports.deleteAll = (req, res) => {
       message:
         err.message || "Some error occurred while removing all Students."
     });
+  });
+};
+
+exports.getMyCompany = (req, res) => {
+  console.log('student', req.user);
+  const student = Student.findOne({
+    where: {
+      id: req.user.id
+    },
+    include: ['company', 'classroom', 'giangvien', 'report']
+  }).then((data) => {
+    res.send(data);
+  });
+};
+
+
+exports.getStudentCompany = (req, res) => {
+  console.log('student', req.query.filter.svId);
+  const studentId = req.query.filter.svId
+  Student.findOne({
+    where: {
+      id: studentId
+    },
+    include: ['company', 'classroom', 'giangvien', 'report']
+  }).then((data) => {
+    res.send(data);
+  });
+};
+
+exports.updateReport =  (req, res) => {
+  const studentId = req.params.id;
+  const report = { ...req.body, sv: studentId }
+  console.log('body', report);
+  Report.findOne({
+    where: {
+      sv: studentId
+    }
+  }).then((data) => {
+    console.log('dataaaaaaaa', data);
+    if (!data) {
+      Report.create(report)
+    } else {
+      data.update(report)
+    }
+    res.send(data);
   });
 };

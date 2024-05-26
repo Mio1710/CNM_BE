@@ -51,9 +51,13 @@ io.on('connection', (socket) => {
     if (verified) {
       // handle message
 
-      console.log('auth', socket.handshake.auth);
+      console.log('auth', socket.handshake.auth, verified.maso);
       console.log('Nhận được msg rồi nèeeeeeeeeeeeee', msg);
-      socket.broadcast.emit('receive', msg);
+      const data = {
+        sender: verified,
+        msg
+      }
+      socket.broadcast.emit('receive', data);
     }
   }
   );
