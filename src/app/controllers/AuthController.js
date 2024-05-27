@@ -1,35 +1,23 @@
 const User = require("../models/User");
 const Student = require("../models/Student");
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 // import to use .env
 require('dotenv').config();
 
 
 exports.login = async  (req, res) => {
-    const { maso, matKhau } = req.body;
-    console.log('loginnnnnnnnnnnnnnnnnnnnnnnn', req.body);
+  const { maso, matKhau } = req.body;
 
   // This is a very basic authentication
-  let user = await User.findOne({
-    where: {
-      maso
-    }
-  });
-
-  let student = await Student.findOne({
-    where: {
-      maso
-    }
-  });
+  let user = await User.findOne({where: {maso}});
+  let student = await Student.findOne({where: {maso}});
 
   if (!user) {
     user = student;
   }
-   
   if (user) {
     // Validate password
-
-    const bcrypt = require('bcrypt');
     const isPasswordValid = bcrypt.compareSync(matKhau, user.matKhau);
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -83,4 +71,35 @@ exports.getUser = async (req, res) => {
 
 exports.logout = async (req, res) => {
     res.status(200).send({ msg: 'Đăng xuất thành công.' });
+}
+
+exports.changePassword = async (req, res) => {
+  const { matKhau, newMatKhau } = req.body;
+  let user = await User.findOne({where: {id: req.user.id}});
+
+  let student = await Student.findOne({where: {id: req.user.id}});
+  if (!user) {
+    user = student;
+  }
+  if (user) {
+    // Validate password
+    const isPasswordValid = bcrypt.compareSync(matKhau, user.matKhau);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        msg: 'Mật khẩu cũ không đúng'
+      });
+    } else {
+      const hash = bcrypt.hashSync(newMatKhau, 10);
+      user.matKhau = hash;
+      user.save();
+      return res.json({
+        msg: 'Đổi mật khẩu thành công.',
+      });
+    }
+  } else {
+    // User not found or password does not match
+    res.status(401).json({
+      msg: 'Đã xảy ra lỗi',
+    });
+  }
 }
