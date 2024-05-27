@@ -50,7 +50,8 @@ const { Op } = require("sequelize");
           }
         },
       },
-    'report'
+    'report',
+    'giangvien'
   ]
   }).then((data) => {
     res.send(data);

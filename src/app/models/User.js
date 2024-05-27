@@ -24,7 +24,13 @@ const User = sequelize.define('User', {
     },
     hinhanh: DataTypes.STRING,
     phone: DataTypes.STRING,
-    type: DataTypes.ENUM('admin', 'teacher')
+    type: DataTypes.ENUM('admin', 'teacher'),
+    fullName: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return `${this.hodem} ${this.ten}`;
+        }
+    },
 }, {
     timestamps: false,
     tableName: 'users'
