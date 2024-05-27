@@ -57,3 +57,21 @@ const { Op } = require("sequelize");
   })
 };
 
+exports.acceptCompany = (req, res) => {
+  const svId = req.params.id;
+  Student.findOne({
+    where: {
+      id: svId
+    },
+    include: ['company']
+  }).then((data) => {
+    console.log('data', data);
+    data.company.update({
+      status: '1'
+    }).then((data) => {
+      res.send(data);
+    })
+  })
+}
+
+
