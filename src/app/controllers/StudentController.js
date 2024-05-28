@@ -47,7 +47,9 @@ exports.create = async (req, res) => {
       }
   });
   if (studentExists) {
-      return res.status(400).send("Student already exists.");
+      return res.status(400).send({
+        msg: "Mã số sinh viên đã tồn tại."
+      });
   }
   // Hash the password
   const bcrypt = require('bcrypt');
@@ -82,17 +84,17 @@ exports.delete = (req, res) => {
   .then(num => {
     if (num == 1) {
       res.send({
-        message: "Student was deleted successfully!"
+        msg: "Student was deleted successfully!"
       });
     } else {
       res.send({
-        message: `Cannot delete Student with id=${id}. Maybe Student was not found!`
+        msg: `Cannot delete Student with id=${id}. Maybe Student was not found!`
       });
     }
   })
   .catch(err => {
     res.status(500).send({
-      message: "Could not delete Student with id=" + id
+      msg: "Could not delete Student with id=" + id
     });
   });
 };
@@ -104,11 +106,11 @@ exports.deleteAll = (req, res) => {
     truncate: false
   })
   .then(nums => {
-    res.send({ message: `${nums} Students were deleted successfully!` });
+    res.send({ msg: `${nums} Students were deleted successfully!` });
   })
   .catch(err => {
     res.status(500).send({
-      message:
+      msg:
         err.message || "Some error occurred while removing all Students."
     });
   });

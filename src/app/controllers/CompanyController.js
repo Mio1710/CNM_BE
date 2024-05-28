@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
   res.send(company);
 };
 */
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
   if (!req.body.tenCongTy) {
     res.status(400).send({
@@ -64,11 +64,10 @@ exports.create = (req, res) => {
     });
     return;
   }
-
   // Create a Company
   const company = {
     tenCongTy: req.body.tenCongTy,
-    status: req.body.status,
+    status: '0',
     lop: req.body.lop,
     gv: req.body.gv,
     viTri: req.body.viTri,
@@ -77,9 +76,14 @@ exports.create = (req, res) => {
     sinhvien: req.user.id 
   };
 
-  // Save Company in the database
-  Company.create(company)
-    .then(data => {
+  const existCompany = await Company.findOne({
+    where: {
+      sinhvien: req.user.id
+    }
+  });
+
+  if(existCompany) {
+    existCompany.update(company).then(data => {
       res.send(data);
     })
     .catch(err => {
@@ -88,6 +92,19 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the Company."
       });
     });
+  } else {
+  // Save Company in the database
+    Company.create(company)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the Company."
+        });
+      });
+    }
 };
 
 // Update a Student identified by the id in the request

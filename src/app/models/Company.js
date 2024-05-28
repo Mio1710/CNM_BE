@@ -30,7 +30,7 @@ const Company = sequelize.define('Company', {
         }
     },
     status: {
-        type: DataTypes.ENUM('0','1')
+        type: DataTypes.ENUM('0','1', '2')
     },
     tenCongTy: DataTypes.STRING,
     viTri: DataTypes.STRING,
